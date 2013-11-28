@@ -1,11 +1,10 @@
 package com.deezer.android.cordovadeezerplugin;
 
-import org.json.JSONObject;
 
 
 public interface DeezerJSListener {
     
-    public void onWebViewLoaded(JSONObject json);
+    public void init(String appId);
     
     public void onPlayTracks(final String ids, int index, int offset,
             boolean autoPlay, boolean addToQueue);

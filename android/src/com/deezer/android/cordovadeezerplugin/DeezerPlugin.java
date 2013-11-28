@@ -19,6 +19,7 @@ import android.widget.Toast;
  */
 public class DeezerPlugin extends CordovaPlugin {
     
+    private final static String METHOD_TAG_PLAYER_INIT = "init";
     private final static String METHOD_TAG_PLAYER_CMD = "doAction";
     private final static String METHOD_TAG_PLAYER_CONTROL = "playerControl";
     
@@ -58,7 +59,12 @@ public class DeezerPlugin extends CordovaPlugin {
         Toast.makeText(mInterface.getActivity(), action, Toast.LENGTH_LONG)
                 .show();
         
-        if (action.equals(METHOD_TAG_PLAYER_CMD)) {
+        if (action.equals(METHOD_TAG_PLAYER_INIT)) {
+            String appId = args.getString(0);
+            mListener.init(appId);
+            callbackContext.success();
+            
+        } else if (action.equals(METHOD_TAG_PLAYER_CMD)) {
             
             JSONObject json = args.getJSONObject(0);
             String command = json.optString("command");
