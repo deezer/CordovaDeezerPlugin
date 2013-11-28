@@ -37,6 +37,7 @@ module.exports = {
      * @param {Integer} mills       The number of milliseconds to vibrate for.
      */
     echo: function() {
+        console.log("Calling echo");
         exec(null, null, "Deezer", "echo", []);
     },
 };
