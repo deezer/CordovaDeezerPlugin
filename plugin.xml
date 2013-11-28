@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+xmlns:android="http://schemas.android.com/apk/res/android"
+           id="com.deezer.cordova.sdk"
+      version="0.3.3">
+
+    <!-- TODO add the engine element to limit supported versions -->
+
+    <!-- PLUGIN METADATA -->
+    <name>Deezer</name>
+    <description>Deezer SDK Plugin</description>
+    <author>Deezer SDK Team</author>
+    <license>Apache 2.0</license>
+    <keywords>cordova,deezer</keywords>
+    <repo>https://github.com/deezer/CordovaDeezerPlugin.git</repo>
+    <issue>https://github.com/deezer/CordovaDeezerPlugin/issues</issue>
+    
+
+    <!-- JAVASCRIPT -->
+    <js-module src="js/deezer-cordova.js" name="DZ">
+        <clobbers target="deezer"/>
+    </js-module>
+    
+
+    <!-- ANDROID -->
+    <platform name="android">
+
+
+        <source-file 
+            src="android/src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java" 
+            target-dir="src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java"/>
+            
+        
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Deezer">
+	            <param name="android-package" value="com/deezer/android/cordovadeezerplugin/DeezerPlugin.java"/>
+	        </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+    </platform>
+
+
+
+</plugin>
