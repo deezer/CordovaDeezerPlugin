@@ -20,7 +20,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     
     <!-- JAVASCRIPT -->
     <js-module src="js/deezer-cordova.js" name="deezer">
-        <merges target="deezer"
+        <merges target="deezer"/>
     </js-module>
     
 
