@@ -38,6 +38,11 @@ module.exports = {
      */
     echo: function() {
         console.log("Calling echo");
-        exec(null, null, "Deezer", "echo", []);
+        cordova.exec(
+            function(win){console.log("win")}, 
+            function(err){console.log("err")}, 
+            "Deezer", 
+            "echo", 
+            []);
     },
 };
