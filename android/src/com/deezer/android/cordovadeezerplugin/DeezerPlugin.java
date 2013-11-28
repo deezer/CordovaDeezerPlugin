@@ -51,7 +51,7 @@ public class DeezerPlugin extends CordovaPlugin {
 
 		Log.i("DeezerPlugin", "execute : " + action);
 
-		// Method not found 
+		// Method not found
 		if (action == null) {
 			return false;
 		}
@@ -90,6 +90,7 @@ public class DeezerPlugin extends CordovaPlugin {
 			final boolean autoPlay = json.optBoolean("autoplay", true);
 			final boolean addToQueue = json.optBoolean("queue", false);
 
+			Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 			if (method.equals(METHOD_NAME_PLAYTRACKS)) {
 				String ids = json.optString("trackList", null);
 				if (ids != null && mListener != null) {
