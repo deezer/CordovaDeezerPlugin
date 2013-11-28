@@ -27,21 +27,33 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     <!-- ANDROID -->
     <platform name="android">
 
+        <!-- Binding class -->
         <source-file 
             src="android/src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java" 
             target-dir="src/com/deezer/android/cordovadeezerplugin/"/>
             
+        <!-- Library files -->
         <source-file  
             src="android/libs/deezer-sdk-0.10.5.jar" 
             target-dir="libs/" />
+        <source-file  
+            src="android/libs/armeabi/libdeezer.so" 
+            target-dir="libs/armeabi/" />
+        <source-file  
+            src="android/libs/armeabi-v7a/libdeezer.so" 
+            target-dir="libs/armeabi/" />
+        <source-file  
+            src="android/libs/x86/libdeezer.so" 
+            target-dir="libs/x86/" />
             
-        
+        <!-- Configuration file -->
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Deezer">
 	            <param name="android-package" value="com.deezer.android.cordovadeezerplugin.DeezerPlugin"/>
 	        </feature>
         </config-file>
 
+        <!-- Android manifest permissions -->
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.INTERNET" />
         </config-file>
