@@ -31,6 +31,12 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <source-file 
             src="android/src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java" 
             target-dir="src/com/deezer/android/cordovadeezerplugin/"/>
+        <source-file 
+            src="android/src/com/deezer/android/cordovadeezerplugin/DeezerJSListener.java" 
+            target-dir="src/com/deezer/android/cordovadeezerplugin/"/>
+        <source-file 
+            src="android/src/com/deezer/android/cordovadeezerplugin/DeezerSDKController.java" 
+            target-dir="src/com/deezer/android/cordovadeezerplugin/"/>
             
         <!-- Library files -->
         <source-file  
