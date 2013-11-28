@@ -17,15 +17,14 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     <issue>https://github.com/deezer/CordovaDeezerPlugin/issues</issue>
     
 
+    
     <!-- JAVASCRIPT -->
     <js-module src="js/deezer-cordova.js" name="DZ">
-        <clobbers target="deezer"/>
     </js-module>
     
 
     <!-- ANDROID -->
     <platform name="android">
-
 
         <source-file 
             src="android/src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java" 
@@ -41,6 +40,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.INTERNET" />
         </config-file>
+        
     </platform>
 
 
