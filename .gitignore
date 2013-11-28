@@ -1,0 +1,10 @@
+
+# Generated files #
+bin/
+gen/
+
+# Android related files #
+local.properties
+
+# Eclipse 
+.metadata
