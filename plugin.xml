@@ -41,7 +41,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             target-dir="libs/armeabi/" />
         <source-file  
             src="android/libs/armeabi-v7a/libdeezer.so" 
-            target-dir="libs/armeabi/" />
+            target-dir="libs/armeabi-v7a/" />
         <source-file  
             src="android/libs/x86/libdeezer.so" 
             target-dir="libs/x86/" />
