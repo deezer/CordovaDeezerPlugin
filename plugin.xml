@@ -29,7 +29,11 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
         <source-file 
             src="android/src/com/deezer/android/cordovadeezerplugin/DeezerPlugin.java" 
-            target-dir="src/com/deezer/android/cordovadeezerplugin"/>
+            target-dir="src/com/deezer/android/cordovadeezerplugin/"/>
+            
+        <asset 
+            src="android/libs/deezer-sdk-0.10.5.jar" 
+            target-dir="libs/" />
             
         
         <config-file target="res/xml/config.xml" parent="/*">
