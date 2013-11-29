@@ -174,8 +174,6 @@ public class DeezerPlugin extends CordovaPlugin {
     }
     
     public void sentToJS_onCurrentTrack(final int index, final Track track) {
-        
-        
         JSONArray array = new JSONArray();
         array.put(index);
         
@@ -188,10 +186,7 @@ public class DeezerPlugin extends CordovaPlugin {
         catch (JSONException e) {
             e.printStackTrace();
         }
-        
-        
     }
-    
     
     public void sendUpdate(final String action, final Object[] params) {
         String method = String.format("%s%s", METHOD_SEND_TO_JS_OBJ, action);
