@@ -2,7 +2,6 @@ package com.deezer.android.cordovadeezerplugin;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import org.apache.cordova.CallbackContext;
 import org.json.JSONException;
@@ -18,9 +17,7 @@ import com.deezer.sdk.network.connect.event.DialogError;
 import com.deezer.sdk.network.connect.event.DialogListener;
 import com.deezer.sdk.network.request.event.DeezerError;
 import com.deezer.sdk.network.request.event.OAuthException;
-import com.deezer.sdk.player.AbstractTrackListPlayer;
 import com.deezer.sdk.player.AlbumPlayer;
-import com.deezer.sdk.player.ArtistRadioPlayer;
 import com.deezer.sdk.player.PlayerWrapper;
 import com.deezer.sdk.player.PlaylistPlayer;
 import com.deezer.sdk.player.RadioPlayer;
@@ -28,6 +25,7 @@ import com.deezer.sdk.player.event.OnPlayerProgressListener;
 import com.deezer.sdk.player.event.RadioPlayerListener;
 import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
 import com.deezer.sdk.player.networkcheck.WifiAndMobileNetworkStateChecker;
+
 
 /**
  * 
