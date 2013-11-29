@@ -19,7 +19,9 @@ import com.deezer.sdk.network.request.event.DeezerError;
 import com.deezer.sdk.network.request.event.OAuthException;
 import com.deezer.sdk.player.AlbumPlayer;
 import com.deezer.sdk.player.PlayerWrapper;
-import com.deezer.sdk.player.event.PlayerWrapperListener;
+import com.deezer.sdk.player.PlaylistPlayer;
+import com.deezer.sdk.player.RadioPlayer;
+import com.deezer.sdk.player.event.RadioPlayerListener;
 import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
 import com.deezer.sdk.player.networkcheck.WifiAndMobileNetworkStateChecker;
 
@@ -75,39 +77,32 @@ public class DeezerSDKController implements DeezerJSListener {
 	public void onPlayTracks(CallbackContext callbackContext, String ids,
 			int index, int offset, boolean autoPlay, boolean addToQueue) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onPlayAlbum(CallbackContext callbackContext, String id,
 			int index, int offset, boolean autoPlay, boolean addToQueue) {
 
-		Log.i(LOG_TAG, "onPlayAlbum");
-
+		// check if a previous player exists
 		if (mPlayerWrapper != null) {
-			Log.d(LOG_TAG, "delete previous player ");
-
 			mPlayerWrapper.stop();
 			mPlayerWrapper.release();
 			mPlayerWrapper = null;
 		}
 
 		try {
-
+			// create the album player
 			mPlayerWrapper = new AlbumPlayer(mActivity.getApplication(),
 					mConnect, new WifiAndMobileNetworkStateChecker());
 
+			// add a listener
 			((AlbumPlayer) mPlayerWrapper)
 					.addPlayerListener(new PlayerListener());
-			Log.d(LOG_TAG, "player created");
 
+			// play the given album id
 			long albumId = Long.valueOf(id);
-
-			Log.d(LOG_TAG, "album id " + albumId);
-
 			((AlbumPlayer) mPlayerWrapper).playAlbum(albumId, index);
 
-			Log.d(LOG_TAG, "album playing ");
 		} catch (OAuthException e) {
 			Log.e(LOG_TAG, "OAuthException", e);
 			callbackContext.error("OAuthException");
@@ -127,15 +122,77 @@ public class DeezerSDKController implements DeezerJSListener {
 	@Override
 	public void onPlayPlaylist(CallbackContext callbackContext, String id,
 			int index, int offset, boolean autoPlay, boolean addToQueue) {
-		// TODO Auto-generated method stub
+		// check if a previous player exists
+		if (mPlayerWrapper != null) {
+			mPlayerWrapper.stop();
+			mPlayerWrapper.release();
+			mPlayerWrapper = null;
+		}
 
+		try {
+			// create the playlist player
+			mPlayerWrapper = new PlaylistPlayer(mActivity.getApplication(),
+					mConnect, new WifiAndMobileNetworkStateChecker());
+
+			// add a listener
+			((PlaylistPlayer) mPlayerWrapper)
+					.addPlayerListener(new PlayerListener());
+
+			// play the given playlist id
+			long playlistId = Long.valueOf(id);
+			((PlaylistPlayer) mPlayerWrapper).playPlaylist(playlistId, index);
+
+		} catch (OAuthException e) {
+			Log.e(LOG_TAG, "OAuthException", e);
+			callbackContext.error("OAuthException");
+		} catch (TooManyPlayersExceptions e) {
+			Log.e(LOG_TAG, "TooManyPlayersExceptions", e);
+			callbackContext.error("TooManyPlayersExceptions");
+		} catch (DeezerError e) {
+			Log.e(LOG_TAG, "DeezerError", e);
+			callbackContext.error("DeezerError");
+		} catch (NumberFormatException e) {
+			Log.e(LOG_TAG, "NumberFormatException", e);
+			callbackContext.error("NumberFormatException");
+		}
 	}
 
 	@Override
 	public void onPlayRadio(CallbackContext callbackContext, String id,
 			int index, int offset, boolean autoPlay, boolean addToQueue) {
-		// TODO Auto-generated method stub
+		// check if a previous player exists
+		if (mPlayerWrapper != null) {
+			mPlayerWrapper.stop();
+			mPlayerWrapper.release();
+			mPlayerWrapper = null;
+		}
 
+		try {
+			// create the radio player
+			mPlayerWrapper = new RadioPlayer(mActivity.getApplication(),
+					mConnect, new WifiAndMobileNetworkStateChecker());
+
+			// add a listener
+			((RadioPlayer) mPlayerWrapper)
+					.addPlayerListener(new PlayerListener());
+
+			// play the given radio id
+			long radioId = Long.valueOf(id);
+			((RadioPlayer) mPlayerWrapper).playRadio(radioId);
+
+		} catch (OAuthException e) {
+			Log.e(LOG_TAG, "OAuthException", e);
+			callbackContext.error("OAuthException");
+		} catch (TooManyPlayersExceptions e) {
+			Log.e(LOG_TAG, "TooManyPlayersExceptions", e);
+			callbackContext.error("TooManyPlayersExceptions");
+		} catch (DeezerError e) {
+			Log.e(LOG_TAG, "DeezerError", e);
+			callbackContext.error("DeezerError");
+		} catch (NumberFormatException e) {
+			Log.e(LOG_TAG, "NumberFormatException", e);
+			callbackContext.error("NumberFormatException");
+		}
 	}
 
 	@Override
@@ -151,6 +208,9 @@ public class DeezerSDKController implements DeezerJSListener {
 
 		if (mPlayerWrapper != null) {
 			mPlayerWrapper.play();
+			callbackContext.success();
+		} else {
+			callbackContext.error("No player to play");
 		}
 
 	}
@@ -161,20 +221,41 @@ public class DeezerSDKController implements DeezerJSListener {
 
 		if (mPlayerWrapper != null) {
 			mPlayerWrapper.pause();
+			callbackContext.success();
+		} else {
+			callbackContext.error("No player to pause");
 		}
 
 	}
 
 	@Override
 	public void onNext(CallbackContext callbackContext) {
-		// TODO Auto-generated method stub
+		Log.i(LOG_TAG, "onNext");
 
+		if (mPlayerWrapper != null) {
+			if (mPlayerWrapper.skipToNextTrack()) {
+				callbackContext.success();
+			} else {
+				callbackContext.error(0);
+			}
+		} else {
+			callbackContext.error("No player to next");
+		}
 	}
 
 	@Override
 	public void onPrev(CallbackContext callbackContext) {
-		// TODO Auto-generated method stub
+		Log.i(LOG_TAG, "onPrev");
 
+		if (mPlayerWrapper != null) {
+			if (mPlayerWrapper.skipToPreviousTrack()) {
+				callbackContext.success();
+			} else {
+				callbackContext.error(0);
+			}
+		} else {
+			callbackContext.error("No player to previous");
+		}
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////
@@ -200,7 +281,7 @@ public class DeezerSDKController implements DeezerJSListener {
 				try {
 					dict.put(key, bundle.getString(key));
 				} catch (JSONException e) {
-					Log.e(LOG_TAG, "Fuck");
+					Log.e(LOG_TAG, "JSONException", e);
 				}
 			}
 
@@ -232,7 +313,7 @@ public class DeezerSDKController implements DeezerJSListener {
 		}
 	}
 
-	private class PlayerListener implements PlayerWrapperListener {
+	private class PlayerListener implements RadioPlayerListener {
 
 		@Override
 		public void onAllTracksEnded() {
@@ -271,9 +352,13 @@ public class DeezerSDKController implements DeezerJSListener {
 		}
 
 		@Override
-		public void onTrackEnded(Track arg0) {
+		public void onTrackEnded(Track track) {
 			Log.i(LOG_TAG, "onTrackEnded");
 		}
 
+		@Override
+		public void onTooManySkipsException() {
+			Log.e(LOG_TAG, "onTooManySkipsException");
+		}
 	}
 }

@@ -90,7 +90,6 @@ public class DeezerPlugin extends CordovaPlugin {
 			final boolean autoPlay = json.optBoolean("autoplay", true);
 			final boolean addToQueue = json.optBoolean("queue", false);
 
-			Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 			if (method.equals(METHOD_NAME_PLAYTRACKS)) {
 				String ids = json.optString("trackList", null);
 				if (ids != null && mListener != null) {
@@ -99,24 +98,28 @@ public class DeezerPlugin extends CordovaPlugin {
 				}
 			} else if (method.equals(METHOD_NAME_PLAYALBUM)) {
 				String id = json.optString("album_id", null);
+				Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 				if (id != null) {
 					mListener.onPlayAlbum(callbackContext, id, index, offset,
 							autoPlay, addToQueue);
 				}
 			} else if (method.equals(METHOD_NAME_PLAYPLAYLIST)) {
 				String id = json.optString("playlist_id", null);
+				Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 				if (id != null) {
 					mListener.onPlayPlaylist(callbackContext, id, index,
 							offset, autoPlay, addToQueue);
 				}
 			} else if (method.equals(METHOD_NAME_PLAYRADIO)) {
 				String id = json.optString("radio_id", null);
+				Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 				if (id != null) {
 					mListener.onPlayRadio(callbackContext, id, index, offset,
 							autoPlay, addToQueue);
 				}
 			} else if (method.equals(METHOD_NAME_PLAYSMARTRADIO)) {
 				String id = json.optString("radio_id", null);
+				Log.wtf("DeezerPlugin", "PlayerControl : " + method + " @" + id);
 				if (id != null) {
 					mListener.onPlayArtistRadio(callbackContext, id, index,
 							offset, autoPlay, addToQueue);
