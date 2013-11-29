@@ -33,6 +33,7 @@ public class DeezerPlugin extends CordovaPlugin {
     
     private final static String METHOD_SEND_TO_JS_OBJ = "deezercordova.EVENTS";
     private final static String METHOD_SEND_TO_JS_POSITION_CHANGED = ".on_position";
+    private final static String METHOD_SEND_TO_JS_BUFFER_CHANGED = ".on_buffering";
     
     private CordovaInterface mInterface;
     private CordovaWebView mWebView;
@@ -141,14 +142,6 @@ public class DeezerPlugin extends CordovaPlugin {
     
     
     public void sendToJs_positionChanged(float position, float duration) {
-        JSONArray args = new JSONArray();
-        try {
-            args.put(position);
-            args.put(duration);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
         
         JSONArray array = new JSONArray();
         try {
@@ -163,10 +156,22 @@ public class DeezerPlugin extends CordovaPlugin {
                 array
         });
     }
-    /**
-     * Create a new plugin result and send it back to JavaScript
-     * 
-     */
+    
+    public void sendToJS_bufferPosition(float position) {
+        JSONArray args = new JSONArray();
+        try {
+            args.put(position);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        sendUpdate(METHOD_SEND_TO_JS_BUFFER_CHANGED, new Object[] {
+                args
+        });
+    }
+    
+
     public void sendUpdate(String action, Object[] params) {
         String method = String.format("%s%s", METHOD_SEND_TO_JS_OBJ, action);
         final StringBuilder jsCommand = new StringBuilder();

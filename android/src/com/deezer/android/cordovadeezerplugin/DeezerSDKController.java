@@ -21,6 +21,7 @@ import com.deezer.sdk.player.AlbumPlayer;
 import com.deezer.sdk.player.PlayerWrapper;
 import com.deezer.sdk.player.PlaylistPlayer;
 import com.deezer.sdk.player.RadioPlayer;
+import com.deezer.sdk.player.event.OnBufferProgressListener;
 import com.deezer.sdk.player.event.OnPlayerProgressListener;
 import com.deezer.sdk.player.event.RadioPlayerListener;
 import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
@@ -106,6 +107,7 @@ public class DeezerSDKController implements DeezerJSListener {
             ((AlbumPlayer) mPlayerWrapper)
                     .addPlayerListener(new PlayerListener());
             mPlayerWrapper.addOnPlayerProgressListener(new PlayerProgressListener());
+            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given album id
             long albumId = Long.valueOf(id);
@@ -130,7 +132,6 @@ public class DeezerSDKController implements DeezerJSListener {
         }
         
     }
-    
     @Override
     public void onPlayPlaylist(CallbackContext callbackContext, String id,
             int index, int offset, boolean autoPlay, boolean addToQueue) {
@@ -149,6 +150,7 @@ public class DeezerSDKController implements DeezerJSListener {
             // add a listener
             ((PlaylistPlayer) mPlayerWrapper)
                     .addPlayerListener(new PlayerListener());
+            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given playlist id
             long playlistId = Long.valueOf(id);
@@ -188,9 +190,11 @@ public class DeezerSDKController implements DeezerJSListener {
             mPlayerWrapper = new RadioPlayer(mActivity.getApplication(),
                     mConnect, new WifiAndMobileNetworkStateChecker());
             
+            
             // add a listener
             ((RadioPlayer) mPlayerWrapper)
                     .addPlayerListener(new PlayerListener());
+            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given radio id
             long radioId = Long.valueOf(id);
@@ -391,12 +395,24 @@ public class DeezerSDKController implements DeezerJSListener {
             float position = (float) progressMS / 1000;
             float duration = 0f;
             if (mPlayerWrapper != null) {
-                duration = mPlayerWrapper.getTrackDuration()/1000;
+                duration = mPlayerWrapper.getTrackDuration() / 1000;
                 Log.i(LOG_TAG, "onPlayerProgress duration : " + duration);
             }
             
             if (mPlugin != null) {
                 mPlugin.sendToJs_positionChanged(position, duration);
+            }
+        }
+    }
+    
+    private class PlayerBufferProgressListener implements OnBufferProgressListener {
+        
+        @Override
+        public void onBufferProgress(double progressMS) {
+            Log.i(LOG_TAG, "onBufferProgress progressMS: " + progressMS);
+            float position = (float) progressMS / 1000;
+            if (mPlugin != null) {
+                mPlugin.sendToJS_bufferPosition(position);
             }
         }
     }
