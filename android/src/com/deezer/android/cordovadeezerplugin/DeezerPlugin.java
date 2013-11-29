@@ -171,7 +171,7 @@ public class DeezerPlugin extends CordovaPlugin {
         });
     }
     
-
+    
     public void sendUpdate(String action, Object[] params) {
         String method = String.format("%s%s", METHOD_SEND_TO_JS_OBJ, action);
         final StringBuilder jsCommand = new StringBuilder();
@@ -187,6 +187,13 @@ public class DeezerPlugin extends CordovaPlugin {
         jsCommand.append(")");
         
         Log.d("DeezerPlugin", "sendUpdate jsCommand : " + jsCommand.toString());
-        mWebView.loadUrl(jsCommand.toString());
+        mWebView.post(new Runnable() {
+            
+            @Override
+            public void run() {
+                mWebView.loadUrl(jsCommand.toString());
+            }
+        });
+        
     }
 }

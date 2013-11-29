@@ -133,7 +133,7 @@
 
                 on_buffering : function(args) {
                     console.log("on_buffering changed : "+ args);
-                    document.querySelector("#buffering_time").innerHTML = Math.floor(args[0]) + " sec";
+                    document.querySelector("#buffering_time").innerHTML = Math.floor(args[0] * 100) + " %";
                 }
             }
         };
