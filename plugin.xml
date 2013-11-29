@@ -40,7 +40,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
             
         <!-- Library files -->
         <source-file  
-            src="android/libs/deezer-sdk-0.10.6.jar" 
+            src="android/libs/deezer-sdk-0.10.7.jar" 
             target-dir="libs/" />
         <source-file  
             src="android/libs/armeabi/libdeezer.so" 
