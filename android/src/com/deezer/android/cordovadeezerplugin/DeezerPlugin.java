@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.deezer.sdk.model.Track;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,7 +43,7 @@ public class DeezerPlugin extends CordovaPlugin {
     private DeezerJSListener mListener;
     
     @Override
-    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+    public void initialize(final CordovaInterface cordova, final CordovaWebView webView) {
         super.initialize(cordova, webView);
         
         Log.i("DeezerPlugin", "initialize");
@@ -53,8 +55,8 @@ public class DeezerPlugin extends CordovaPlugin {
     }
     
     @Override
-    public boolean execute(String action, JSONArray args,
-            CallbackContext callbackContext)
+    public boolean execute(final String action, final JSONArray args,
+            final CallbackContext callbackContext)
             throws JSONException {
         Log.i("DeezerPlugin", "execute : " + action);
         
@@ -99,7 +101,7 @@ public class DeezerPlugin extends CordovaPlugin {
             
             if (method.equals(METHOD_NAME_PLAYTRACKS)) {
                 String ids = json.optString("trackList", null);
-                if (ids != null && mListener != null) {
+                if ((ids != null) && (mListener != null)) {
                     mListener.onPlayTracks(callbackContext, ids, index, offset,
                             autoPlay, addToQueue);
                 }
@@ -141,7 +143,7 @@ public class DeezerPlugin extends CordovaPlugin {
     }
     
     
-    public void sendToJs_positionChanged(float position, float duration) {
+    public void sendToJs_positionChanged(final float position, final float duration) {
         
         JSONArray array = new JSONArray();
         try {
@@ -157,7 +159,7 @@ public class DeezerPlugin extends CordovaPlugin {
         });
     }
     
-    public void sendToJS_bufferPosition(float position) {
+    public void sendToJS_bufferPosition(final float position) {
         JSONArray args = new JSONArray();
         try {
             args.put(position);
@@ -171,8 +173,27 @@ public class DeezerPlugin extends CordovaPlugin {
         });
     }
     
+    public void sentToJS_onCurrentTrack(final int index, final Track track) {
+        
+        
+        JSONArray array = new JSONArray();
+        array.put(index);
+        
+        try {
+            array.put(track.toJson());
+            sendUpdate(".on_current_track", new Object[] {
+                    array
+            });
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        
+        
+    }
     
-    public void sendUpdate(String action, Object[] params) {
+    
+    public void sendUpdate(final String action, final Object[] params) {
         String method = String.format("%s%s", METHOD_SEND_TO_JS_OBJ, action);
         final StringBuilder jsCommand = new StringBuilder();
         

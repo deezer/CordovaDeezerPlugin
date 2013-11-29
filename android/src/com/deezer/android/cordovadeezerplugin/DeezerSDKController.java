@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 
 import org.apache.cordova.CallbackContext;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +25,6 @@ import com.deezer.sdk.player.ArtistRadioPlayer;
 import com.deezer.sdk.player.PlayerWrapper;
 import com.deezer.sdk.player.PlaylistPlayer;
 import com.deezer.sdk.player.RadioPlayer;
-import com.deezer.sdk.player.event.OnBufferProgressListener;
 import com.deezer.sdk.player.event.OnPlayerProgressListener;
 import com.deezer.sdk.player.event.RadioPlayerListener;
 import com.deezer.sdk.player.exception.TooManyPlayersExceptions;
@@ -55,7 +55,7 @@ public class DeezerSDKController implements DeezerJSListener {
      * 
      * @param activity
      */
-    public DeezerSDKController(Activity activity, DeezerPlugin plugin) {
+    public DeezerSDKController(final Activity activity, final DeezerPlugin plugin) {
         mActivity = activity;
         mPlugin = plugin;
     }
@@ -65,13 +65,13 @@ public class DeezerSDKController implements DeezerJSListener {
     // /////////////////////////////////////////////////////////////////////////////
     
     @Override
-    public void init(CallbackContext callbackContext, String appId) {
+    public void init(final CallbackContext callbackContext, final String appId) {
         mConnect = new DeezerConnect(mActivity, appId);
         callbackContext.success();
     }
     
     @Override
-    public void login(CallbackContext callbackContext) {
+    public void login(final CallbackContext callbackContext) {
         final AuthListener listener = new AuthListener(callbackContext);
         
         mActivity.runOnUiThread(new Runnable() {
@@ -84,14 +84,14 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPlayTracks(CallbackContext callbackContext, String ids,
-            int index, int offset, boolean autoPlay, boolean addToQueue) {
+    public void onPlayTracks(final CallbackContext callbackContext, final String ids,
+            final int index, final int offset, final boolean autoPlay, final boolean addToQueue) {
         // TODO Auto-generated method stub
     }
     
     @Override
-    public void onPlayAlbum(CallbackContext callbackContext, String id,
-            int index, int offset, boolean autoPlay, boolean addToQueue) {
+    public void onPlayAlbum(final CallbackContext callbackContext, final String id,
+            final int index, final int offset, final boolean autoPlay, final boolean addToQueue) {
         
         // check if a previous player exists
         if (mPlayerWrapper != null) {
@@ -107,10 +107,9 @@ public class DeezerSDKController implements DeezerJSListener {
             
             // add a listener
             ((AlbumPlayer) mPlayerWrapper)
-                    .addPlayerListener(new PlayerListener());
+                    .addPlayerListener(new PlayerListener(callbackContext));
             mPlayerWrapper
                     .addOnPlayerProgressListener(new PlayerProgressListener());
-            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given album id
             long albumId = Long.valueOf(id);
@@ -137,8 +136,8 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPlayPlaylist(CallbackContext callbackContext, String id,
-            int index, int offset, boolean autoPlay, boolean addToQueue) {
+    public void onPlayPlaylist(final CallbackContext callbackContext, final String id,
+            final int index, final int offset, final boolean autoPlay, final boolean addToQueue) {
         // check if a previous player exists
         if (mPlayerWrapper != null) {
             mPlayerWrapper.stop();
@@ -152,11 +151,10 @@ public class DeezerSDKController implements DeezerJSListener {
                     mConnect, new WifiAndMobileNetworkStateChecker());
             
             // add a listener
-            ((AlbumPlayer) mPlayerWrapper)
-                    .addPlayerListener(new PlayerListener());
+            ((PlaylistPlayer) mPlayerWrapper)
+                    .addPlayerListener(new PlayerListener(callbackContext));
             mPlayerWrapper
                     .addOnPlayerProgressListener(new PlayerProgressListener());
-            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given playlist id
             long playlistId = Long.valueOf(id);
@@ -182,8 +180,8 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPlayRadio(CallbackContext callbackContext, String id,
-            int index, int offset, boolean autoPlay, boolean addToQueue) {
+    public void onPlayRadio(final CallbackContext callbackContext, final String id,
+            final int index, final int offset, final boolean autoPlay, final boolean addToQueue) {
         // check if a previous player exists
         if (mPlayerWrapper != null) {
             mPlayerWrapper.stop();
@@ -197,11 +195,10 @@ public class DeezerSDKController implements DeezerJSListener {
                     mConnect, new WifiAndMobileNetworkStateChecker());
             
             // add a listener
-            ((AlbumPlayer) mPlayerWrapper)
-                    .addPlayerListener(new PlayerListener());
+            ((RadioPlayer) mPlayerWrapper)
+                    .addPlayerListener(new PlayerListener(callbackContext));
             mPlayerWrapper
                     .addOnPlayerProgressListener(new PlayerProgressListener());
-            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given radio id
             long radioId = Long.valueOf(id);
@@ -227,8 +224,8 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPlayArtistRadio(CallbackContext callbackContext, String id,
-            int index, int offset, boolean autoPlay, boolean addToQueue) {
+    public void onPlayArtistRadio(final CallbackContext callbackContext, final String id,
+            final int index, final int offset, final boolean autoPlay, final boolean addToQueue) {
         // check if a previous player exists
         if (mPlayerWrapper != null) {
             mPlayerWrapper.stop();
@@ -242,11 +239,10 @@ public class DeezerSDKController implements DeezerJSListener {
                     mConnect, new WifiAndMobileNetworkStateChecker());
             
             // add a listener
-            ((AlbumPlayer) mPlayerWrapper)
-                    .addPlayerListener(new PlayerListener());
+            ((ArtistRadioPlayer) mPlayerWrapper)
+                    .addPlayerListener(new PlayerListener(callbackContext));
             mPlayerWrapper
                     .addOnPlayerProgressListener(new PlayerProgressListener());
-            mPlayerWrapper.addOnBufferProgressListener(new PlayerBufferProgressListener());
             
             // play the given radio id
             long radioId = Long.valueOf(id);
@@ -272,7 +268,7 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPlay(CallbackContext callbackContext) {
+    public void onPlay(final CallbackContext callbackContext) {
         Log.i(LOG_TAG, "onPlay");
         
         if (mPlayerWrapper != null) {
@@ -285,7 +281,7 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPause(CallbackContext callbackContext) {
+    public void onPause(final CallbackContext callbackContext) {
         Log.i(LOG_TAG, "onPause");
         
         if (mPlayerWrapper != null) {
@@ -298,7 +294,7 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onNext(CallbackContext callbackContext) {
+    public void onNext(final CallbackContext callbackContext) {
         Log.i(LOG_TAG, "onNext");
         
         if (mPlayerWrapper != null) {
@@ -313,7 +309,7 @@ public class DeezerSDKController implements DeezerJSListener {
     }
     
     @Override
-    public void onPrev(CallbackContext callbackContext) {
+    public void onPrev(final CallbackContext callbackContext) {
         Log.i(LOG_TAG, "onPrev");
         
         if (mPlayerWrapper != null) {
@@ -335,12 +331,12 @@ public class DeezerSDKController implements DeezerJSListener {
         
         private CallbackContext mContext;
         
-        public AuthListener(CallbackContext context) {
+        public AuthListener(final CallbackContext context) {
             mContext = context;
         }
         
         @Override
-        public void onComplete(Bundle bundle) {
+        public void onComplete(final Bundle bundle) {
             Log.i(LOG_TAG, "Logged In!");
             
             JSONObject dict = new JSONObject();
@@ -365,19 +361,19 @@ public class DeezerSDKController implements DeezerJSListener {
         }
         
         @Override
-        public void onDeezerError(DeezerError e) {
+        public void onDeezerError(final DeezerError e) {
             Log.e(LOG_TAG, "onDeezerError", e);
             mContext.error("DeezerError");
         }
         
         @Override
-        public void onError(DialogError e) {
+        public void onError(final DialogError e) {
             Log.e(LOG_TAG, "onError", e);
             mContext.error("Error");
         }
         
         @Override
-        public void onOAuthException(OAuthException e) {
+        public void onOAuthException(final OAuthException e) {
             Log.e(LOG_TAG, "onOAuthException", e);
             mContext.error("OAuthException");
         }
@@ -386,28 +382,48 @@ public class DeezerSDKController implements DeezerJSListener {
     private class PlayerListener implements RadioPlayerListener {
         
         private boolean mTrackListSent = false;
+        private final CallbackContext mContext;
+        
+        
+        public PlayerListener(final CallbackContext context) {
+            mContext = context;
+        }
         
         @Override
-        public void onPlayTrack(Track track) {
+        public void onPlayTrack(final Track track) {
             Log.i(LOG_TAG, "onPlayTrack " + track.getTitle());
             
             if (!mTrackListSent) {
                 if (mPlayerWrapper instanceof AbstractTrackListPlayer) {
                     
+                    JSONObject callback = new JSONObject();
+                    JSONArray data = new JSONArray();
+                    
                     List<Track> tracks = ((AbstractTrackListPlayer) mPlayerWrapper)
                             .getTracks();
+                    for (Track t : tracks) {
+                        try {
+                            data.put(t.toJson());
+                        }
+                        catch (JSONException e) {
+                            // ignore
+                        }
+                    }
                     
-                    
-                    
+                    try {
+                        callback.put("data", data);
+                        mContext.success(callback);
+                    }
+                    catch (JSONException e) {
+                        mContext.error(0);
+                    }
                 }
-                // TODO send tracklist
             }
             
-            // TODO send
+            mPlugin.sentToJS_onCurrentTrack(-1, track);
         }
-        
         @Override
-        public void onTrackEnded(Track track) {
+        public void onTrackEnded(final Track track) {
             Log.i(LOG_TAG, "onTrackEnded");
         }
         
@@ -417,28 +433,28 @@ public class DeezerSDKController implements DeezerJSListener {
         }
         
         @Override
-        public void onRequestDeezerError(DeezerError e, Object request) {
+        public void onRequestDeezerError(final DeezerError e, final Object request) {
             Log.e(LOG_TAG, "onRequestDeezerError", e);
         }
         
         @Override
-        public void onRequestIOException(IOException e, Object request) {
+        public void onRequestIOException(final IOException e, final Object request) {
             Log.e(LOG_TAG, "onRequestIOException", e);
         }
         
         @Override
-        public void onRequestJSONException(JSONException e, Object request) {
+        public void onRequestJSONException(final JSONException e, final Object request) {
             Log.e(LOG_TAG, "onRequestJSONException", e);
         }
         
         @Override
-        public void onRequestMalformedURLException(MalformedURLException e,
-                Object request) {
+        public void onRequestMalformedURLException(final MalformedURLException e,
+                final Object request) {
             Log.e(LOG_TAG, "onRequestMalformedURLException", e);
         }
         
         @Override
-        public void onRequestOAuthException(OAuthException e, Object request) {
+        public void onRequestOAuthException(final OAuthException e, final Object request) {
             Log.e(LOG_TAG, "onRequestMalformedURLException", e);
         }
         
@@ -451,7 +467,7 @@ public class DeezerSDKController implements DeezerJSListener {
     private class PlayerProgressListener implements OnPlayerProgressListener {
         
         @Override
-        public void onPlayerProgress(long progressMS) {
+        public void onPlayerProgress(final long progressMS) {
             Log.i(LOG_TAG, "onPlayerProgress progressMS: " + progressMS);
             float position = (float) progressMS / 1000;
             float duration = 0f;
@@ -462,18 +478,6 @@ public class DeezerSDKController implements DeezerJSListener {
             
             if (mPlugin != null) {
                 mPlugin.sendToJs_positionChanged(position, duration);
-            }
-        }
-    }
-    
-    private class PlayerBufferProgressListener implements OnBufferProgressListener {
-        
-        @Override
-        public void onBufferProgress(double progressMS) {
-            Log.i(LOG_TAG, "onBufferProgress progressMS: " + progressMS);
-            float position = (float) progressMS / 1000;
-            if (mPlugin != null) {
-                mPlugin.sendToJS_bufferPosition(position);
             }
         }
     }
